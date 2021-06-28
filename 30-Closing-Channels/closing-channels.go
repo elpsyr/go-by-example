@@ -3,7 +3,7 @@ package main
 import "fmt"
 
 func main() {
-	jobs := make(chan int, 5)
+	jobs := make(chan int, 100)
 	done := make(chan bool)
 	go func() {
 		for {
@@ -17,11 +17,15 @@ func main() {
 			}
 		}
 	}()
-	for j := 1; j <= 3; j++ {
+	for j := 1; j <= 100; j++ {
 		jobs <- j
 		fmt.Println("sent job", j)
 	}
+	//关闭通道，告诉接收方接收工作已完成
 	close(jobs)
+
+	//主线程在等待两个协程执行完毕
 	fmt.Println("sent all jobs")
-	<-done
+	fmt.Println(<-done)
+	//<-done
 }
