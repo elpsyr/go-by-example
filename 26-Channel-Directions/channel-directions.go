@@ -17,6 +17,7 @@ func main() {
 	ping(pings, "passed message")
 	//fatal error
 	//fmt.Println(<-pings)
+
 	pong(pings, pongs)
 	fmt.Println(<-pongs)
 }
