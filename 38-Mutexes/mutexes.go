@@ -30,23 +30,25 @@ func main() {
 
 	for w := 0; w < 10; w++ {
 		go func() {
-			key := rand.Intn(5)
-			val := rand.Intn(100)
-			mutex.Lock()
-			state[key] = val
-			mutex.Unlock()
-			atomic.AddUint64(&writeOps, 1)
-			time.Sleep(time.Millisecond)
+			for true {
+				key := rand.Intn(5)
+				val := rand.Intn(100)
+				mutex.Lock()
+				state[key] = val
+				mutex.Unlock()
+				atomic.AddUint64(&writeOps, 1)
+				time.Sleep(time.Millisecond)
+			}
 
 		}()
 	}
 
-	time.Sleep(time.Second)
+	time.Sleep(time.Second * 10)
 	readOpsFinal := atomic.LoadUint64(&readOps)
 	fmt.Println("readOps: ", readOpsFinal)
 
 	writeOpsFinal := atomic.LoadUint64(&writeOps)
-	fmt.Println("readOps: ", writeOpsFinal)
+	fmt.Println("writeOps: ", writeOpsFinal)
 
 	mutex.Lock()
 	fmt.Println("state: ", state)
